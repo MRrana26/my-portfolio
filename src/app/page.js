@@ -1,7 +1,12 @@
-import Image from "next/image";
+import Hero from "@/Components/Hero";
+import Navbar from "@/Components/Navbar";
+
 
 export default function Home() {
   return (
-    <h1>Hello Cloudflare updated portfolio </h1>
+    <div>
+      <Navbar />
+      <Hero />
+    </div>
   );
 }
