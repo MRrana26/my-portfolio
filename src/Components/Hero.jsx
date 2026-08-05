@@ -8,6 +8,7 @@ const Hero = () => {
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
   const roles = [
     "Web Developer",
@@ -16,8 +17,15 @@ const Hero = () => {
     "Problem Solver"
   ];
 
+  // Set mounted state to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Typing animation effect
   useEffect(() => {
+    if (!mounted) return;
+    
     const currentRole = roles[currentRoleIndex];
     
     const timeout = setTimeout(() => {
@@ -41,7 +49,7 @@ const Hero = () => {
     }, isDeleting ? 50 : 100);
     
     return () => clearTimeout(timeout);
-  }, [displayText, isDeleting, currentRoleIndex, roles]);
+  }, [displayText, isDeleting, currentRoleIndex, roles, mounted]);
 
   // Experience data for corner cards
   const experienceCards = [
@@ -68,10 +76,23 @@ const Hero = () => {
     }
   ];
 
+  // If not mounted yet, show a placeholder to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-16">
+            {/* Placeholder content */}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
       <div className="max-w-7xl mx-auto w-full">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+        <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-16">
           
           {/* Left Side - Text Content */}
           <div className="flex-1 text-center lg:text-left space-y-6">
@@ -97,7 +118,7 @@ const Hero = () => {
                 <span className="text-xl sm:text-2xl text-gray-700 dark:text-gray-300">I am a</span>
                 <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600 dark:text-blue-400 min-w-[180px] border-r-2 border-blue-600 dark:border-blue-400 pr-2">
                   {displayText}
-                  <span className="animate-blink">|</span>
+                  <span className="inline-block animate-blink">|</span>
                 </span>
               </div>
             </div>
@@ -144,15 +165,13 @@ const Hero = () => {
               {/* Main Image Container */}
               <div className="relative w-80 h-80 sm:w-96 sm:h-96 lg:w-[450px] lg:h-[450px] rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-1 shadow-2xl">
                 <div className="w-full h-full rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-                  {/* Replace with your actual image */}
                   <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
-                    <Image src={'/masud.jpeg'} width={500} height={500} alt="Masudur Rahman"></Image>
+                    <Image src={'/masud.jpeg'} width={500} height={500} alt="Masudur Rahman" />
                   </div>
                 </div>
               </div>
 
               {/* Corner Cards */}
-              {/* Top Right Corner Card */}
               <div className="absolute -top-5 -right-5 sm:-top-8 sm:-right-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 sm:p-4 backdrop-blur-sm border border-gray-200 dark:border-gray-700 animate-float">
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-blue-600 dark:text-blue-400">
@@ -169,8 +188,7 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Middle Right Corner Card */}
-              <div className="absolute top-1/2 -right-5 sm:-right-8 transform -translate-y-1/2 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 sm:p-4 backdrop-blur-sm border border-gray-200 dark:border-gray-700 animate-float animation-delay-200">
+              <div className="absolute top-1/2 -right-5 sm:-right-8 transform -translate-y-1/2 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 sm:p-4 backdrop-blur-sm border border-gray-200 dark:border-gray-700 animate-float" style={{ animationDelay: '0.2s' }}>
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg text-purple-600 dark:text-purple-400">
                     {experienceCards[1].icon}
@@ -186,8 +204,7 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Bottom Right Corner Card */}
-              <div className="absolute -bottom-5 -right-5 sm:-bottom-8 sm:-right-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 sm:p-4 backdrop-blur-sm border border-gray-200 dark:border-gray-700 animate-float animation-delay-500">
+              <div className="absolute -bottom-5 -right-5 sm:-bottom-8 sm:-right-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 sm:p-4 backdrop-blur-sm border border-gray-200 dark:border-gray-700 animate-float" style={{ animationDelay: '0.5s' }}>
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg text-green-600 dark:text-green-400">
                     {experienceCards[2].icon}
@@ -204,11 +221,12 @@ const Hero = () => {
               </div>
             </div>
           </div>
+
         </div>
       </div>
 
-      {/* Custom CSS */}
-      <style jsx>{`
+      {/* ── Global Styles ── */}
+      <style jsx global>{`
         @keyframes blink {
           0%, 100% { opacity: 1; }
           50% { opacity: 0; }
@@ -229,14 +247,6 @@ const Hero = () => {
         
         .animate-float {
           animation: float 3s ease-in-out infinite;
-        }
-        
-        .animation-delay-200 {
-          animation-delay: 0.2s;
-        }
-        
-        .animation-delay-500 {
-          animation-delay: 0.5s;
         }
       `}</style>
     </section>
