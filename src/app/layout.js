@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +17,8 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "MASUDUR RAHMAN",
   description: "My Portfolio",
-  icons: "/masud.jpeg"
+  icons: "/masud-profile.png",
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({ children }) {
@@ -29,6 +31,7 @@ export default function RootLayout({ children }) {
 
         <Navbar />
         {children}
+        <Toaster position="top-right" richColors />
         <Footer />
         
         </body>
